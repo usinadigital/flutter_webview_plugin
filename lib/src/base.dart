@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,8 +42,7 @@ class FlutterWebviewPlugin {
   final _onHttpError = StreamController<WebViewHttpError>.broadcast();
   final _onPostMessage = StreamController<JavascriptMessage>.broadcast();
 
-  final Map<String, JavascriptChannel> _javascriptChannels =
-      <String, JavascriptChannel>{};
+  final Map<String, JavascriptChannel> _javascriptChannels = <String, JavascriptChannel>{};
 
   Future<Null> _handleMessages(MethodCall call) async {
     switch (call.method) {
@@ -74,12 +72,10 @@ class FlutterWebviewPlugin {
         );
         break;
       case 'onHttpError':
-        _onHttpError.add(
-            WebViewHttpError(call.arguments['code'], call.arguments['url']));
+        _onHttpError.add(WebViewHttpError(call.arguments['code'], call.arguments['url']));
         break;
       case 'javascriptChannelMessage':
-        _handleJavascriptChannelMessage(
-            call.arguments['channel'], call.arguments['message']);
+        _handleJavascriptChannelMessage(call.arguments['channel'], call.arguments['message']);
         break;
     }
   }
@@ -203,8 +199,7 @@ class FlutterWebviewPlugin {
       _javascriptChannels[channel.name] = channel;
     });
 
-    args['javascriptChannelNames'] =
-        _extractJavascriptChannelNames(javascriptChannels).toList();
+    args['javascriptChannelNames'] = _extractJavascriptChannelNames(javascriptChannels).toList();
 
     if (rect != null) {
       args['rect'] = {
@@ -240,8 +235,7 @@ class FlutterWebviewPlugin {
   Future<bool> canGoBack() async => await _channel.invokeMethod('canGoBack');
 
   /// Checks if webview can navigate back
-  Future<bool> canGoForward() async =>
-      await _channel.invokeMethod('canGoForward');
+  Future<bool> canGoForward() async => await _channel.invokeMethod('canGoForward');
 
   /// Navigates forward on the Webview.
   Future<void> goForward() async => await _channel.invokeMethod('forward');
@@ -273,8 +267,7 @@ class FlutterWebviewPlugin {
   }
 
   // Stops current loading process
-  Future<void> stopLoading() async =>
-      await _channel.invokeMethod('stopLoading');
+  Future<void> stopLoading() async => await _channel.invokeMethod('stopLoading');
 
   /// Close all Streams
   void dispose() {
@@ -316,22 +309,18 @@ class FlutterWebviewPlugin {
   }
 
   Set<String> _extractJavascriptChannelNames(Set<JavascriptChannel> channels) {
-    final Set<String> channelNames =
-        channels.map((JavascriptChannel channel) => channel.name).toSet();
+    final Set<String> channelNames = channels.map((JavascriptChannel channel) => channel.name).toSet();
     return channelNames;
   }
 
-  void _handleJavascriptChannelMessage(
-      final String channelName, final String message) {
+  void _handleJavascriptChannelMessage(final String channelName, final String message) {
     if (_javascriptChannels.containsKey(channelName))
-      _javascriptChannels[channelName]!
-          .onMessageReceived(JavascriptMessage(message));
+      _javascriptChannels[channelName]!.onMessageReceived(JavascriptMessage(message));
     else
       print('Channel "$channelName" is not exstis');
   }
 
-  void _assertJavascriptChannelNamesAreUnique(
-      final Set<JavascriptChannel>? channels) {
+  void _assertJavascriptChannelNamesAreUnique(final Set<JavascriptChannel>? channels) {
     if (channels == null || channels.isEmpty) {
       return;
     }
@@ -359,8 +348,7 @@ class WebViewStateChanged {
         t = WebViewState.abortLoad;
         break;
       default:
-        throw UnimplementedError(
-            'WebViewState type "${map['type']}" is not supported.');
+        throw UnimplementedError('WebViewState type "${map['type']}" is not supported.');
     }
     return WebViewStateChanged(t, map['url'], map['navigationType']);
   }

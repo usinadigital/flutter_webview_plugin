@@ -323,28 +323,14 @@ class WebviewManager {
     }
 
     private String[] getSafeAcceptedTypes(WebChromeClient.FileChooserParams params) {
-
-        // the getAcceptTypes() is available only in api 21+
-        // for lower level, we ignore it
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return params.getAcceptTypes();
-        }
-
-        final String[] EMPTY = {};
-        return EMPTY;
+        return params.getAcceptTypes();
     }
 
     private void clearCookies() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().removeAllCookies(new ValueCallback<Boolean>() {
-                @Override
-                public void onReceiveValue(Boolean aBoolean) {
-
-                }
-            });
-        } else {
-            CookieManager.getInstance().removeAllCookie();
-        }
+        CookieManager.getInstance().removeAllCookies(new ValueCallback<Boolean>() {
+            @Override
+            public void onReceiveValue(Boolean aBoolean) {}
+        });
     }
 
     private void clearCache() {
@@ -392,10 +378,9 @@ class WebviewManager {
 
         webView.getSettings().setSupportMultipleWindows(supportMultipleWindows);
 
-        webView.getSettings().setAppCacheEnabled(appCacheEnabled);
-
-        webView.getSettings().setAllowFileAccessFromFileURLs(allowFileURLs);
-        webView.getSettings().setAllowUniversalAccessFromFileURLs(allowFileURLs);
+        // Ernesto: Deprecated: webView.getSettings().setAppCacheEnabled(appCacheEnabled);
+        // Ernesto: Deprecated: webView.getSettings().setAllowFileAccessFromFileURLs(allowFileURLs);
+        // Ernesto: Deprecated: webView.getSettings().setAllowUniversalAccessFromFileURLs(allowFileURLs);
 
         webView.getSettings().setUseWideViewPort(useWideViewPort);
 
@@ -416,9 +401,7 @@ class WebviewManager {
             webView.getSettings().setGeolocationEnabled(true);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        }
+        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
         if (clearCache) {
             clearCache();
